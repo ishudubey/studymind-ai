@@ -26,11 +26,11 @@ Here is a visual walk-through of the interface. We will capture and upload these
 ### Task Manager
 ![Task Manager](screenshots/tasks.png)
 
-### Progress Dashboard
-![Progress Dashboard](screenshots/progress.png)
+### Pomodoro Focus Timer
+![Pomodoro Timer](screenshots/timer.png)
 
 ### AI Chat Concierge
-![AI Chat](screenshots/ai%20studio.png)
+![AI Chat](screenshots/ai-chat.png)
 
 ### Daily Planner Timeline
 ![Daily Planner](screenshots/planner.png)
