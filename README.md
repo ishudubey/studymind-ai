@@ -1,6 +1,6 @@
 # StudyMind AI — Personal Study Concierge
 
-![StudyMind AI Banner Placeholder](screenshots/dashboard.png)
+![StudyMind AI Banner](screenshots/banner.png)
 
 ![Made with JS](https://img.shields.io/badge/Made%20with-JavaScript-yellow)
 ![Gemini AI](https://img.shields.io/badge/AI-Gemini%202.5%20Flash%20Lite-blue)
