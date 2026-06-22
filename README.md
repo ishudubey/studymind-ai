@@ -12,7 +12,7 @@
 StudyMind AI is an offline-first, premium client-side personal AI study concierge designed to help students optimize their schedules, block study hours, focus with Pomodoros, check in on energy levels, and learn dynamically.
 
 * **Built for:** Kaggle x Google AI Agents Capstone 2026 — Concierge Agents Track
-* **Live Demo Link:** [GitHub Pages URL Placeholder]
+* **Live Demo Link:** [https://ishudubey.github.io/studymind-ai/](https://ishudubey.github.io/studymind-ai/)
 
 ---
 
