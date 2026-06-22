@@ -1,0 +1,610 @@
+<!-- 
+Kaggle Submission Link: [Submission Link Placeholder]
+Deploying to GitHub Pages:
+1. Initialize git repository in this workspace: git init
+2. Add files: git add . && git commit -m "Initial commit of StudyMind AI"
+3. Create a public repository on GitHub and link it: git remote add origin <your-github-repo-url>
+4. Push to main: git push -u origin main
+5. Enable GitHub Pages in your repository settings: Settings -> Pages -> Source: Deploy from a branch (select main / root).
+6. Access your deployed site at https://<your-username>.github.io/<your-repo-name>/
+-->
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMind AI — Personal Study Concierge</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ONBOARDING SCREEN -->
+  <div id="onboarding-overlay" class="modal-overlay hidden">
+    <div class="modal-card onboarding-card">
+      <div class="onboarding-header">
+        <div class="logo-icon-large">⚡</div>
+        <h2>Welcome to StudyMind AI</h2>
+        <p class="subtitle">Your premium AI-powered study concierge</p>
+      </div>
+      <div class="onboarding-body">
+        <p>StudyMind AI helps you manage tasks, create optimized time-blocked schedules, stay focused using Pomodoro sessions with mood check-ins, and supercharge your studying using Gemini AI.</p>
+        
+        <div class="setup-api-box">
+          <label for="onboarding-api-key">Enter your Gemini API Key:</label>
+          <div class="api-input-container">
+            <input type="password" id="onboarding-api-key" placeholder="AIzaSy...">
+            <button type="button" class="btn-toggle-visible" onclick="togglePasswordVisibility('onboarding-api-key')">👁️</button>
+          </div>
+          <span class="api-help-text" style="font-weight:600; color:var(--primary-teal);">Free — no credit card needed. 1500 requests/day.</span>
+          <span class="api-help-text">Get a free key from <a href="https://aistudio.google.com" target="_blank" rel="noopener">Google AI Studio</a>.</span>
+        </div>
+        
+        <p class="features-summary">🔒 All data, including your API key, is stored 100% locally and privately in your browser's localStorage.</p>
+      </div>
+      <div class="onboarding-footer">
+        <button id="btn-skip-onboarding" class="btn btn-secondary">Use Offline (No AI)</button>
+        <button id="btn-save-onboarding" class="btn btn-primary">Get Started</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER -->
+  <div class="app-layout">
+    
+    <!-- SIDEBAR NAVIGATION (Desktop) & BOTTOM NAV (Mobile) -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-spark">✨</span>
+        <span class="logo-text">StudyMind AI</span>
+      </div>
+      <nav class="sidebar-menu">
+        <a href="#settings" class="menu-item active" data-tab="settings">
+          <svg class="menu-icon" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+          <span>Settings</span>
+        </a>
+        <a href="#home" class="menu-item" data-tab="home">
+          <svg class="menu-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <span>Home</span>
+        </a>
+        <a href="#tasks" class="menu-item" data-tab="tasks">
+          <svg class="menu-icon" viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          <span>Tasks</span>
+        </a>
+        <a href="#planner" class="menu-item" data-tab="planner">
+          <svg class="menu-icon" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+          <span>Planner</span>
+        </a>
+        <a href="#timer" class="menu-item" data-tab="timer">
+          <svg class="menu-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+          <span>Timer</span>
+        </a>
+        <a href="#progress" class="menu-item" data-tab="progress">
+          <svg class="menu-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+          <span>Progress</span>
+        </a>
+        <a href="#aistudio" class="menu-item" data-tab="aistudio">
+          <svg class="menu-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+          <span>AI Studio</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT WINDOW -->
+    <main class="content-area">
+      <!-- HEADER -->
+      <header class="main-header">
+        <div class="header-left">
+          <h1 id="view-title">Settings</h1>
+        </div>
+        <div class="header-right">
+          <!-- Fallback Alert Banner -->
+          <div id="api-status-banner" class="api-badge badge-warning">
+            <span>⚠️ Setup Gemini Key in Settings</span>
+          </div>
+          <button id="btn-toggle-theme" class="btn-icon" aria-label="Toggle Theme">
+            <span class="theme-sun-icon">☀️</span>
+            <span class="theme-moon-icon hidden">🌙</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- VIEW SECTIONS -->
+      <div class="scroll-container">
+
+        <!-- VIEW: SETTINGS (Default View) -->
+        <section id="view-settings" class="tab-view active">
+          <div class="card settings-hero">
+            <div class="settings-hero-content">
+              <h2>Setup Your StudyMind Environment</h2>
+              <p>Configure your Gemini API key and adjust settings to personalize your learning workflow.</p>
+            </div>
+          </div>
+
+          <div class="grid-2col">
+            <!-- Gemini Settings Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Gemini AI Credentials</h3>
+              </div>
+              <div class="card-body">
+                <p class="description-text">Enter your personal Gemini API key to unlock the AI Chat Concierge, Topic Explainer, Quiz Generator, and Syllabus Planner.</p>
+                <div class="form-group">
+                  <label for="settings-api-key">Gemini API Key</label>
+                  <div class="api-input-container">
+                    <input type="password" id="settings-api-key" placeholder="AIzaSy...">
+                    <button type="button" class="btn-toggle-visible" onclick="togglePasswordVisibility('settings-api-key')">👁️</button>
+                  </div>
+                  <span class="helper-text">Your key is stored securely in your browser's local storage. Get a free API key (using <strong>gemini-2.5-flash-lite</strong>) from <a href="https://aistudio.google.com" target="_blank" rel="noopener">Google AI Studio</a>.</span>
+                </div>
+                <div class="settings-actions">
+                  <button id="btn-save-settings" class="btn btn-primary">Save API Key</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Appearance & Customization -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Preferences & Data</h3>
+              </div>
+              <div class="card-body">
+                <div class="setting-row">
+                  <div>
+                    <h4 class="setting-title">Color Theme</h4>
+                    <p class="setting-desc">Toggle between Light and Dark interface modes.</p>
+                  </div>
+                  <button id="btn-theme-selector" class="btn btn-secondary">Switch Theme</button>
+                </div>
+                
+                <div class="setting-row border-top">
+                  <div>
+                    <h4 class="setting-title">Reset Workspace</h4>
+                    <p class="setting-desc warning-text">Permanently deletes all tasks, streaks, Pomodoro metrics, and keys.</p>
+                  </div>
+                  <button id="btn-reset-data" class="btn btn-danger">Reset All Data</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- About This Project Card -->
+          <div class="card gap-top">
+            <div class="card-header">
+              <h3>About This Project</h3>
+            </div>
+            <div class="card-body">
+              <h4 style="font-family: var(--font-heading); margin-bottom: 0.5rem; font-weight: 700; color: var(--primary-teal);">StudyMind AI</h4>
+              <p class="description-text" style="margin-bottom: 0.5rem; font-size: 0.85rem;">
+                <strong>Track:</strong> Concierge Agents — Kaggle x Google Capstone 2026
+              </p>
+              <p class="description-text" style="margin-bottom: 0; font-size: 0.85rem;">
+                Built with Gemini 2.5 Flash Lite (free tier) + vanilla JS. All data stays on your device.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: HOME (DASHBOARD) -->
+        <section id="view-home" class="tab-view">
+          <!-- Deadline Banner Alert Container -->
+          <div id="home-alert-banner" class="alert-banner hidden">
+            <div class="alert-banner-icon">🔔</div>
+            <div class="alert-banner-text" id="alert-banner-content">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Hero Metrics Slider / Grid -->
+          <div class="quick-stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">📅</div>
+              <div class="stat-info">
+                <span class="stat-val" id="stat-pending-tasks">0</span>
+                <span class="stat-lbl">Pending Tasks</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🔥</div>
+              <div class="stat-info">
+                <span class="stat-val" id="stat-streak">0 days</span>
+                <span class="stat-lbl">Study Streak</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">⏱️</div>
+              <div class="stat-info">
+                <span class="stat-val" id="stat-hours">0.0h</span>
+                <span class="stat-lbl">Hours Studied This Week</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">✅</div>
+              <div class="stat-info">
+                <span class="stat-val" id="stat-completed-tasks">0</span>
+                <span class="stat-lbl">Tasks Finished</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Daily Quote and Overview -->
+          <div class="grid-2col">
+            <div class="card motivation-card gradient-bg">
+              <div class="card-body">
+                <span class="quote-tag">Weekly Motivation</span>
+                <p id="motivational-quote" class="quote-text">"The secret of getting ahead is getting started."</p>
+                <p class="quote-author">— Mark Twain</p>
+              </div>
+            </div>
+
+            <!-- Due Soon Summary -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Urgent Deadlines</h3>
+              </div>
+              <div class="card-body" id="dashboard-urgent-list">
+                <p class="empty-state">No urgent deadlines. Good job staying on track!</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: TASKS -->
+        <section id="view-tasks" class="tab-view">
+          <div class="task-page-layout">
+            <!-- Add Task Form -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Create Study Task</h3>
+              </div>
+              <div class="card-body">
+                <form id="add-task-form">
+                  <div class="form-group">
+                    <label for="task-subject">Subject Name</label>
+                    <input type="text" id="task-subject" placeholder="e.g. Physics, History" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="task-topic">Topic / Specific Activity</label>
+                    <input type="text" id="task-topic" placeholder="e.g. Newton's Third Law, French Revolution" required>
+                  </div>
+                  <div class="grid-2col gap-small">
+                    <div class="form-group">
+                      <label for="task-deadline">Deadline Date</label>
+                      <input type="date" id="task-deadline" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="task-priority">Priority</label>
+                      <select id="task-priority">
+                        <option value="high">High</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="low">Low</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-block">Add Task</button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Task List Display -->
+            <div class="card">
+              <div class="card-header flex-header">
+                <h3>Pending Tasks</h3>
+                <span class="badge" id="task-count-badge">0 tasks</span>
+              </div>
+              <div class="card-body">
+                <div class="task-filters-row">
+                  <span class="label">Priority colors:</span>
+                  <span class="legend-dot dot-overdue"></span> Overdue
+                  <span class="legend-dot dot-urgent"></span> Due &le; 3 Days
+                  <span class="legend-dot dot-safe"></span> Safe
+                </div>
+                <div class="task-list-scroller" id="tasks-container">
+                  <!-- Rendered dynamically -->
+                  <p class="empty-state">Your study board is clean! Add a task to get started.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: PLANNER -->
+        <section id="view-planner" class="tab-view">
+          <div class="card">
+            <div class="card-header">
+              <h3>Daily Time-Blocked Planner</h3>
+            </div>
+            <div class="card-body">
+              <p class="description-text">Enter how many hours you have available for studying today. The concierge will distribute your pending study tasks into a realistic schedule.</p>
+              <div class="planner-setup">
+                <div class="form-group-inline">
+                  <label for="planner-hours">Available Hours Today:</label>
+                  <input type="number" id="planner-hours" min="0.5" max="16" step="0.5" value="3" required>
+                  <button id="btn-generate-plan" class="btn btn-primary">Distribute Schedule</button>
+                </div>
+              </div>
+
+              <div id="planner-schedule-wrapper" class="hidden">
+                <h4 class="timeline-title">Today's Block Timeline</h4>
+                <div class="timeline" id="timeline-container">
+                  <!-- Dynamically populated timeline blocks -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: TIMER (POMODORO) -->
+        <section id="view-timer" class="tab-view">
+          <div class="timer-layout">
+            <!-- Main Timer Card -->
+            <div class="card timer-card">
+              <div class="card-body flex-center-column">
+                <div class="timer-mode-selectors">
+                  <button id="timer-mode-work" class="timer-mode-btn active">Focus (25m)</button>
+                  <button id="timer-mode-break" class="timer-mode-btn">Break (5m)</button>
+                </div>
+                
+                <!-- Countdown Visual -->
+                <div class="timer-display">
+                  <svg class="progress-ring" width="220" height="220">
+                    <circle class="progress-ring-circle-bg" stroke="var(--border-color)" stroke-width="8" fill="transparent" r="100" cx="110" cy="110"/>
+                    <circle id="timer-progress-ring" class="progress-ring-circle" stroke="var(--primary-teal)" stroke-width="8" fill="transparent" r="100" cx="110" cy="110"/>
+                  </svg>
+                  <div class="timer-time" id="timer-time-text">25:00</div>
+                </div>
+
+                <!-- Active Task Selection -->
+                <div class="timer-task-picker">
+                  <label for="timer-active-task">Focusing on:</label>
+                  <select id="timer-active-task">
+                    <option value="">-- General Study Session --</option>
+                    <!-- Filled by js -->
+                  </select>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="timer-controls">
+                  <button id="btn-timer-reset" class="btn btn-secondary btn-icon-round" title="Reset">🔄</button>
+                  <button id="btn-timer-toggle" class="btn btn-primary btn-large-play">Start Session</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Focus Stats Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Focus Analytics</h3>
+              </div>
+              <div class="card-body">
+                <p>Complete Pomodoro focus blocks to log hours and build streaks.</p>
+                <div class="subject-sessions-tally">
+                  <h4>Sessions Completed by Subject</h4>
+                  <ul class="sessions-list" id="timer-subject-tally">
+                    <li class="empty-state">No sessions completed yet. Let's study!</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: PROGRESS -->
+        <section id="view-progress" class="tab-view">
+          <div class="grid-2col">
+            <!-- Progress Tracker -->
+            <div class="card">
+              <div class="card-header flex-header">
+                <h3>Subject Mastery</h3>
+              </div>
+              <div class="card-body" id="progress-bars-container">
+                <!-- Rendered dynamically -->
+                <p class="empty-state">Create and complete tasks under subjects to view your completion rates.</p>
+              </div>
+            </div>
+
+            <!-- Log & Exporter -->
+            <div class="card">
+              <div class="card-header">
+                <h3>Export Study Data</h3>
+              </div>
+              <div class="card-body">
+                <p class="description-text">Generate a weekly summary report for your offline records, showing topics covered, focus hours logged, streaks, and upcoming tasks.</p>
+                <button id="btn-export-report" class="btn btn-primary btn-block">Download Weekly Report (.txt)</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW: AI STUDIO -->
+        <section id="view-aistudio" class="tab-view">
+          <!-- Syllabus Planner -->
+          <div class="card gap-bottom">
+            <div class="card-header">
+              <h3>Syllabus AI Planner</h3>
+            </div>
+            <div class="card-body">
+              <p class="description-text">Paste your raw course outline or exam syllabus text below. Gemini will automatically extract individual study topics and add them directly to your task list as items with suggested priority levels.</p>
+              
+              <div class="form-group">
+                <label for="ai-syllabus-text">Syllabus / Exam Chapters (Plain Text)</label>
+                <textarea id="ai-syllabus-text" rows="6" placeholder="e.g. Chemistry Midterm Chapters:&#10;Chapter 3: Stoichiometry (High weight)&#10;Chapter 4: Chemical Reactions (Basic formulas)"></textarea>
+              </div>
+              <button id="btn-parse-syllabus" class="btn btn-primary">Generate Task List with AI</button>
+              <div id="syllabus-loading" class="spinner-loader hidden">
+                <div class="spinner"></div> <span>Analyzing Syllabus & Creating Tasks...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quiz Generator -->
+          <div class="card">
+            <div class="card-header">
+              <h3>AI Quiz Generator</h3>
+            </div>
+            <div class="card-body">
+              <p class="description-text">Paste textbook notes, formulas, or a topic name. Gemini will generate a custom 5-question multiple choice quiz for you to test your knowledge.</p>
+              
+              <div class="form-group">
+                <label for="ai-quiz-topic">Quiz Topic or Study Notes</label>
+                <textarea id="ai-quiz-topic" rows="5" placeholder="Paste your study summary here, or simply type a topic like: 'Mitosis vs Meiosis' or 'Linear Equations'"></textarea>
+              </div>
+              <button id="btn-generate-quiz" class="btn btn-primary">Generate 5-Question Quiz</button>
+              <div id="quiz-loading" class="spinner-loader hidden">
+                <div class="spinner"></div> <span>Generating Quiz Questions...</span>
+              </div>
+
+              <!-- Interactive Quiz Panel (Hidden by default) -->
+              <div id="quiz-quiz-panel" class="quiz-panel hidden">
+                <h4 id="quiz-title">Quiz: Live Session</h4>
+                <div id="quiz-questions-container">
+                  <!-- Rendered dynamically -->
+                </div>
+                <div class="quiz-controls-row">
+                  <button id="btn-submit-quiz" class="btn btn-primary">Grade My Quiz</button>
+                  <span id="quiz-score-badge" class="badge hidden"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="app-footer">
+        <p>&copy; 2026 StudyMind AI. All data saved locally.</p>
+        <button id="btn-about-trigger" class="btn-text">About This Project</button>
+      </footer>
+    </main>
+  </div>
+
+  <!-- FLOATING CONCIERGE CHAT WIDGET -->
+  <div id="floating-chat-widget" class="floating-chat">
+    <button id="btn-chat-toggle" class="chat-toggle-bubble" aria-label="Open AI Concierge">
+      <span class="chat-icon">💬</span>
+      <span class="chat-badge hidden">!</span>
+    </button>
+    <div id="chat-window" class="chat-window hidden">
+      <div class="chat-window-header">
+        <div class="header-details">
+          <span class="chat-title">AI Study Concierge</span>
+          <span class="chat-status">Ready</span>
+        </div>
+        <button id="btn-chat-close" class="btn-icon" aria-label="Close Chat">✕</button>
+      </div>
+      <div class="chat-messages" id="chat-messages-container">
+        <div class="chat-message assistant">
+          Hello! I'm your Study Concierge. I can help recommend a study plan, select topics based on your current mood/energy levels, or give schedule advice. Try clicking a quick command below!
+        </div>
+      </div>
+      <div class="chat-quick-suggestions">
+        <button class="quick-btn" onclick="triggerQuickChat('What should I study today?')">What should I study today?</button>
+        <button class="quick-btn" onclick="triggerQuickChat('I have 2 hours, suggest a schedule')">I have 2 hours, make a plan</button>
+        <button class="quick-btn" onclick="triggerQuickChat('I feel low energy, suggest easy topics')">I'm tired, suggest easy topics</button>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chat-user-input" placeholder="Ask your study concierge...">
+        <button id="btn-chat-send" class="btn btn-primary btn-round-send">➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP: MOOD/ENERGY CHECK-IN (Before Pomodoro) -->
+  <div id="mood-modal" class="modal-overlay hidden">
+    <div class="modal-card mood-card">
+      <div class="modal-header">
+        <h3>Focus Session Check-in</h3>
+      </div>
+      <div class="modal-body flex-center-column">
+        <p class="instruction-title">How is your energy level right now?</p>
+        <p class="description-text">Your study concierge will use this to suggest easy or challenging tasks next time you ask.</p>
+        <div class="mood-selector-row">
+          <button class="mood-btn" data-mood="1" title="Exhausted">
+            <span class="mood-emoji">😫</span>
+            <span class="mood-num">1</span>
+          </button>
+          <button class="mood-btn" data-mood="2" title="Tired">
+            <span class="mood-emoji">🥱</span>
+            <span class="mood-num">2</span>
+          </button>
+          <button class="mood-btn" data-mood="3" title="Focused">
+            <span class="mood-emoji">😐</span>
+            <span class="mood-num">3</span>
+          </button>
+          <button class="mood-btn" data-mood="4" title="Energized">
+            <span class="mood-emoji">😊</span>
+            <span class="mood-num">4</span>
+          </button>
+          <button class="mood-btn" data-mood="5" title="Hyper-Focused">
+            <span class="mood-emoji">⚡</span>
+            <span class="mood-num">5</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-timer" class="btn btn-secondary">Cancel</button>
+        <button id="btn-confirm-mood" class="btn btn-primary" disabled>Start Focus Block</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP: EXPLAIN TOPIC MODAL -->
+  <div id="explain-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="explain-topic-title">AI Topic Explainer</h3>
+        <button class="btn-close-modal" onclick="closeModal('explain-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="explain-loading" class="spinner-loader">
+          <div class="spinner"></div> <span>Consulting study concierge...</span>
+        </div>
+        <div id="explain-content" class="explain-content-text hidden">
+          <!-- Populated from Gemini response -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeModal('explain-modal')">Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP: ABOUT THIS PROJECT -->
+  <div id="about-modal" class="modal-overlay hidden">
+    <div class="modal-card about-card">
+      <div class="modal-header">
+        <h3>About StudyMind AI</h3>
+        <button class="btn-close-modal" onclick="closeModal('about-modal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>StudyMind AI</strong> is an offline-first, client-side personal AI study concierge built to help students schedule tasks, study efficiently with Pomodoros, check in on energy level moods, and learn actively.</p>
+        
+        <p>This project was built for the <strong>Google x Kaggle Capstone Project</strong> competition, specifically under the <strong>Concierge Agents Track</strong>. It showcases how a small-scale agent can assist in day-to-day productivity using modern client-side integrations.</p>
+        
+        <h4>Key Concepts Demonstrated:</h4>
+        <ul>
+          <li><strong>Zero-Cost / Serverless Architecture:</strong> Uses direct Gemini API calls from the browser with the student's personal key.</li>
+          <li><strong>Data Privacy:</strong> All task boards, Pomodoro intervals, streaks, and API keys reside completely in local browser storage.</li>
+          <li><strong>Mood-Driven Advice:</strong> Integrates a mood check-in logger (1-5 energy levels) to supply context to the LLM agent, optimizing the suggestions.</li>
+          <li><strong>Integrated Tools:</strong> Dynamic timeline creation, quiz construction, and raw syllabus parsing into manageable structural tasks.</li>
+        </ul>
+
+        <h4>Gemini API Key details:</h4>
+        <p>You can get a free, high-limit key (supporting <strong>gemini-2.5-flash-lite</strong>) directly from <a href="https://aistudio.google.com" target="_blank" rel="noopener">Google AI Studio</a>.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="closeModal('about-modal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Javascript Files -->
+  <script src="gemini.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
